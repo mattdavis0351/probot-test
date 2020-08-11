@@ -21,7 +21,9 @@ module.exports = (app) => {
     try {
       app.log("you are inside issue_comment.created");
       if (!bot && containsCommand) {
+        console.log("from index... trying to invoke sendUserInvitation");
         const inviteResp = await sendUserInvitation(context);
+        console.log("from index... trying to invoke commentWithStatus");
         const commentResp = await commentWithStatus(context);
         return { inviteResp, commentResp };
       }
