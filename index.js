@@ -19,6 +19,7 @@ module.exports = (app) => {
     const containsCommand = body.includes("/add-me");
 
     try {
+      app.log("you are inside issue_comment.created");
       if (!bot && containsCommand) {
         const inviteResp = await sendUserInvitation(context);
         const commentResp = await commentWithStatus(context);
