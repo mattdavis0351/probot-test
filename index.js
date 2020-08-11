@@ -2,18 +2,30 @@
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Application} app
  */
-module.exports = app => {
+
+// const createEntitlement = require("./lib/createEntitlement");
+const sendUserInvitation = require("./lib/sendUserInvitation");
+const commentWithStatus = require("./lib/commentWithStatus");
+
+// const fs = require("fs");
+
+module.exports = (app) => {
   // Your code here
-  app.log('Yay, the app was loaded!')
+  app.log("Yay, the app was loaded!");
 
-  app.on('issues.opened', async context => {
-    const issueComment = context.issue({ body: 'Thanks for opening this issue!' })
-    return context.github.issues.createComment(issueComment)
-  })
+  app.on("issue_comment.created", async (context) => {
+    const bot = context.isBot;
+    const { body } = context.payload.comment;
+    const containsCommand = body.includes("/add-me");
 
-  // For more information on building apps:
-  // https://probot.github.io/docs/
-
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
-}
+    try {
+      if (!bot && containsCommand) {
+        const inviteResp = await sendUserInvitation(context);
+        const commentResp = await commentWithStatus(context);
+        return { inviteResp, commentResp };
+      }
+    } catch (error) {
+      app.log(error);
+    }
+  });
+};
