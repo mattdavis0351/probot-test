@@ -40,29 +40,10 @@ jobs:
         run: |
           az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --runtime "NODE|12-lts" --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
 
-#       - name: Set Web App secrets
-#         if: success()
-#         uses: Azure/appservice-settings@v1
-#         with:
-#           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-#           app-settings-json: |
-#             [
-#                 {
-#                     "name": "APP_ID",
-#                     "value": "${{secrets.PROBOT_APP_ID}}",
-#                     "slotSetting": false
-#                 },
-#                 {
-#                     "name": "PRIVATE_KEY",
-#                     "value": "${{secrets.PROBOT_APP_PRI_KEY}}",
-#                     "slotSetting": false
-#                 },
-#                 {
-#                     "name": "WEBHOOK_SECRET",
-#                     "value": "${{secrets.PROBOT_WEBHOOK_SECRET}}",
-#                     "slotSetting": false
-#                 }
-#             ]
+      - name: Configure probot app secrets
+        if: success()
+        run: |
+          az webapp config appsettings set  --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --settings APP_ID=${{secrets.PROBOT_APP_ID}} PRIVATE_KEY=${{secrets.PROBOT_APP_PRI_KEY}} WEBHOOK_SECRET=${{secrets.PROBOT_WEBHOOK_SECRET}}
 
       - name: use Node
         uses: actions/setup-node@v1
