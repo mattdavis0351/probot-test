@@ -57,7 +57,7 @@ jobs:
               },
               {
                   "name": "PRIVATE_KEY",
-                  "value": "${{ secretes.PROBOT_APP_PRI_KEY }}",
+                  "value": "${{ secrets.PROBOT_APP_PRI_KEY }}",
                   "slotSetting": false
               },
               {
