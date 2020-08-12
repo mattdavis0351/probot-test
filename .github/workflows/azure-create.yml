@@ -40,29 +40,29 @@ jobs:
         run: |
           az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
 
-      - name: Set Web App secrets
-        if: success()
-        uses: Azure/appservice-settings@v1
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          app-settings-json: |
-            [
-                {
-                    "name": "APP_ID",
-                    "value": "${{secrets.PROBOT_APP_ID}}",
-                    "slotSetting": false
-                },
-                {
-                    "name": "PRIVATE_KEY",
-                    "value": "${{secrets.PROBOT_APP_PRI_KEY}}",
-                    "slotSetting": false
-                },
-                {
-                    "name": "WEBHOOK_SECRET",
-                    "value": "${{secrets.PROBOT_WEBHOOK_SECRET}}",
-                    "slotSetting": false
-                }
-            ]
+#       - name: Set Web App secrets
+#         if: success()
+#         uses: Azure/appservice-settings@v1
+#         with:
+#           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#           app-settings-json: |
+#             [
+#                 {
+#                     "name": "APP_ID",
+#                     "value": "${{secrets.PROBOT_APP_ID}}",
+#                     "slotSetting": false
+#                 },
+#                 {
+#                     "name": "PRIVATE_KEY",
+#                     "value": "${{secrets.PROBOT_APP_PRI_KEY}}",
+#                     "slotSetting": false
+#                 },
+#                 {
+#                     "name": "WEBHOOK_SECRET",
+#                     "value": "${{secrets.PROBOT_WEBHOOK_SECRET}}",
+#                     "slotSetting": false
+#                 }
+#             ]
 
       - name: use Node
         uses: actions/setup-node@v1
@@ -77,4 +77,4 @@ jobs:
         if: success()
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: "probot-add-collaborators"
