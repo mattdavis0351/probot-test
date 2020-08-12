@@ -40,7 +40,7 @@ jobs:
       - name: Configure probot app secrets
         if: success()
         run: |
-          az webapp config appsettings set  --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --settings APP_ID=${{secrets.PROBOT_APP_ID}} PRIVATE_KEY=${{secrets.PROBOT_APP_PRI_KEY}} WEBHOOK_SECRET=${{secrets.PROBOT_WEBHOOK_SECRET}}
+          az webapp config appsettings set  --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --settings APP_ID=${{secrets.PROBOT_APP_ID}} PRIVATE_KEY="${{secrets.PROBOT_APP_PRI_KEY}}" WEBHOOK_SECRET=${{secrets.PROBOT_WEBHOOK_SECRET}}
       - name: use Node
         uses: actions/setup-node@v1
         with:
