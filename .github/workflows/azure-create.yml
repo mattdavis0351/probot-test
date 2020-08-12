@@ -2,7 +2,7 @@ name: Configure Azure environment
 
 on:
   issues:
-    types: [closed]
+    types: [labeled]
 
 env:
   AZURE_RESOURCE_GROUP: probot-applications
