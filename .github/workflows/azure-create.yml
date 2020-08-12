@@ -14,7 +14,7 @@ jobs:
   setup-up-azure-resources:
     runs-on: ubuntu-latest
 
-    if: contains(github.event.issue.labels.*.name, 'provision probot app')
+    if: contains(github.event.issues.labels.*.name, 'provision probot app')
 
     steps:
       - name: Checkout repository
@@ -40,29 +40,41 @@ jobs:
         run: |
           az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
 
-      - name: Configure probot app secrets
+      - name: Set Web App secrets
         if: success()
-        run: |
-          az webapp config appsettings set  --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --settings APP_ID=${{secrets.PROBOT_APP_ID}} PRIVATE_KEY=${{secrets.PROBOT_APP_PRI_KEY}} WEBHOOK_SECRET=${{secrets.PROBOT_WEBHOOK_SECRET}}
-  depoloy-probot-application:
-    runs-on: ubuntu-latest
-    needs: setup-up-azure-resources
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Login using Azure CLI
-        uses: azure/login@v1
+        uses: Azure/appservice-settings@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-settings-json: |
+            [
+                {
+                    "name": "APP_ID",
+                    "value": "${{secrets.PROBOT_APP_ID}}",
+                    "slotSetting": false
+                },
+                {
+                    "name": "PRIVATE_KEY",
+                    "value": "${{secrets.PROBOT_APP_PRI_KEY}}",
+                    "slotSetting": false
+                },
+                {
+                    "name": "WEBHOOK_SECRET",
+                    "value": "${{secrets.PROBOT_WEBHOOK_SECRET}}",
+                    "slotSetting": false
+                }
+            ]
+
       - name: use Node
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
       - name: install deps
         run: |
           npm install
+
       - name: Deploy application
+        if: success()
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          startup-command: npm run start
