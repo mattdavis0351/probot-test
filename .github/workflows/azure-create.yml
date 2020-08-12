@@ -14,7 +14,7 @@ jobs:
   setup-up-azure-resources:
     runs-on: ubuntu-latest
 
-    if: contains(github.event.issues.labels.*.name, 'provision probot app')
+    if: contains(github.event.issue.labels.*.name, 'provision probot app')
 
     steps:
       - name: Checkout repository
