@@ -15,11 +15,11 @@ module.exports = (app) => {
     const containsCommand = body.includes('/add-me')
     try {
       if (!bot && containsCommand) {
-        const inviteResp = await sendUserInvitation(context)
+        await sendUserInvitation(context)
 
-        const commentResp = await commentWithStatus(context)
+        await commentWithStatus(context)
 
-        return { inviteResp, commentResp }
+        // return { inviteResp, commentResp }
       }
       if (bot) {
         return false
