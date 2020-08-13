@@ -7,26 +7,23 @@ const sendUserInvitation = require('./lib/sendUserInvitation')
 const commentWithStatus = require('./lib/commentWithStatus')
 
 module.exports = (app) => {
+  // Your code here
   app.log('Yay, the app was loaded!')
 
   app.on('issue_comment.created', async (context) => {
     const bot = context.isBot
     const { body } = context.payload.comment
     const containsCommand = body.includes('/add-me')
+
     try {
+      app.log('you are inside issue_comment.created')
       if (!bot && containsCommand) {
-        app.log('calling sendUserInvitation')
+        console.log('from index... trying to invoke sendUserInvitation')
         const inviteResp = await sendUserInvitation(context)
-        app.log(
-          `sendUserInvitation completed, \nvalue ${inviteResp}\nnow calling comment with status`
-        )
+        console.log('from index... trying to invoke commentWithStatus')
         const commentResp = await commentWithStatus(context)
-        app.log(`comment with status has been called.\nvalue ${commentResp}`)
         return { inviteResp, commentResp }
       }
-      // if (bot) {
-      //   return false;
-      // }
     } catch (error) {
       app.log(error)
     }
