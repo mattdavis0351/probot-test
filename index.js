@@ -15,17 +15,20 @@ module.exports = (app) => {
     const containsCommand = body.includes('/add-me')
     try {
       if (!bot && containsCommand) {
-        await sendUserInvitation(context)
-
-        await commentWithStatus(context)
-
-        // return { inviteResp, commentResp }
+        app.log('calling sendUserInvitation')
+        const inviteResp = await sendUserInvitation(context)
+        app.log(
+          `sendUserInvitation completed, \nvalue ${inviteResp}\nnow calling comment with status`
+        )
+        const commentResp = await commentWithStatus(context)
+        app.log(`comment with status has been called.\nvalue ${commentResp}`)
+        return { inviteResp, commentResp }
       }
-      if (bot) {
-        return false
-      }
+      // if (bot) {
+      //   return false;
+      // }
     } catch (error) {
-      app.log(error.message)
+      app.log(error)
     }
   })
 }
