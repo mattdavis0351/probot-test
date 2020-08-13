@@ -15,8 +15,9 @@ module.exports = (app) => {
     const containsCommand = body.includes('/add-me')
     try {
       if (!bot && containsCommand) {
+        app.log("index: trying to send invitation")
         await sendUserInvitation(context)
-
+        app.log("index: trying to send comment")
         await commentWithStatus(context)
 
         // return { inviteResp, commentResp }
