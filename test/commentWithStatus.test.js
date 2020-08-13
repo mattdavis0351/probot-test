@@ -46,7 +46,7 @@ describe('commentWithStatus Method', () => {
 
     const res = await commentWithStatus(context)
     expect(scopedNock.isDone()).toBe(true)
-    expect(res).toBe('comment successfully creaated')
+    expect(res).toBe('comment successfully created')
   })
 
   it('throws with the expected error on a 404', async () => {
